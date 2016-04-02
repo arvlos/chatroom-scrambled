@@ -48,7 +48,7 @@ def chat_server():
 					NICKNAMES[sock.getpeername()] = nickname
 					sys.stdout.write("Client (%s, %s) connected " % address)
 					print ("under the nickname %s" % nickname)
-					broadcast(server_socket, new_socket, "%s entered our chat room\n" % nickname)
+					broadcast(server_socket, new_socket, "\r%s entered our chat room\n" % nickname)
 				
 				# In case the socket is instantly broken
 				else:
@@ -63,18 +63,21 @@ def chat_server():
 
 					if data:
 						# Means there is something in the socket
-						broadcast(server_socket, sock, "\r" + '[' + str(NICKNAMES[sock.getpeername()]) + '] ' + data)
+						broadcast(server_socket, sock, "\r" + '[' + NICKNAMES[sock.getpeername()] + '] ' + data)
 					
 					else:
 						# There is nothing to be read, remove the socket that's broken
 						if sock in SOCKET_LIST:
 							SOCKET_LIST.remove(sock)
 
-						broadcast(server_socket, sock, "Client (%s, %s) is offline\n" % address)
+						sys.stdout.write("Client %s " % NICKNAMES[sock.getpeername()])
+						print ('(' + str(sock.getpeername()) + ') ' + "went offline")
+
+						broadcast(server_socket, sock, "\rClient %s went offline\n" % NICKNAMES[sock.getpeername()])
 
 				# Exception
 				except:
-					broadcast(server_socket, sock, "Client (%s, %s) is offline\n" % address)
+					broadcast(server_socket, sock, "\rClient %s went offline\n" % NICKNAMES[sock.getpeername()])
 					continue
 
 	server_socket.close()
