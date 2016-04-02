@@ -26,7 +26,11 @@ def chat_client():
 		print "Unable to connect"
 		sys.exit()
 
-	print "Connected to remote host. You can start sending messages"
+	print "Connected to remote host"
+	sys.stdout.write("Enter your nickname: "); sys.stdout.flush()
+	nickname = sys.stdin.readline()
+	s.send(nickname)
+	print "Welcome to our chatroom, %s. You can start sending messages" % nickname
 	print_chat_peripherals()
 
 	while True:

@@ -65,7 +65,7 @@ def chat_server():
 # Broadcast chat messages to all the clients
 def broadcast(server_socket, sock, message):
 	for socket in SOCKET_LIST:
-		# Send the message only to peer
+		# Send the message only to peers, not to the connected one, nor to the server
 		if socket != server_socket and socket != sock:
 			try:
 				socket.send(message)
