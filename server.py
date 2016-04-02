@@ -8,6 +8,7 @@ HOST = ''
 SOCKET_LIST = []
 RECV_BUFFER = 4096
 PORT = 9000
+NICKNAMES = {}
 
 def chat_server():
 
@@ -32,11 +33,28 @@ def chat_server():
 			if sock == server_socket:
 				new_socket, address = server_socket.accept()
 				SOCKET_LIST.append(new_socket)
-				print "Client (%s, %s) connected" % address
+				count = 0
+				#print "Client (%s, %s) connected" % address
+				#print SOCKET_LIST
 
-				broadcast(server_socket, new_socket, "[%s:%s] entered our chat room\n" % address)
+				#broadcast(server_socket, new_socket, "[%s:%s] entered our chat room\n" % address)
 
 			# A message from a client, not a new connection
+			elif sock == new_socket and count == 0:
+				# The first message by the new user is his nickname
+				nickname = sock.recv(RECV_BUFFER)
+				if nickname:
+					count += 1
+					NICKNAMES[sock.getpeername()] = nickname
+					sys.stdout.write("Client (%s, %s) connected " % address)
+					print ("under the nickname %s" % nickname)
+					broadcast(server_socket, new_socket, "%s entered our chat room\n" % nickname)
+				
+				# In case the socket is instantly broken
+				else:
+					if sock in SOCKET_LIST:
+						SOCKET_LIST.remove(sock)
+
 			else:
 				# Process data from the client
 				try:
@@ -45,7 +63,7 @@ def chat_server():
 
 					if data:
 						# Means there is something in the socket
-						broadcast(server_socket, sock, "\r" + '[' + str(sock.getpeername()) + '] ' + data)
+						broadcast(server_socket, sock, "\r" + '[' + str(NICKNAMES[sock.getpeername()]) + '] ' + data)
 					
 					else:
 						# There is nothing to be read, remove the socket that's broken
