@@ -1,6 +1,7 @@
 # Created by Artem Losev
 # Creation date: 4/1/2016
 # Reference and source of inspiration: the tutorial at bogotobogo.com
+# The server code for the chat application
 
 import sys, socket, select
 
@@ -73,11 +74,13 @@ def chat_server():
 						sys.stdout.write("Client %s " % NICKNAMES[sock.getpeername()])
 						print ('(' + str(sock.getpeername()) + ') ' + "went offline")
 
-						broadcast(server_socket, sock, "\rClient %s went offline\n" % NICKNAMES[sock.getpeername()])
+						# Remove broadcasting system messages to simplify the encryption
+						#broadcast(server_socket, sock, "\rClient %s went offline\n" % NICKNAMES[sock.getpeername()])
 
 				# Exception
 				except:
-					broadcast(server_socket, sock, "\rClient %s went offline\n" % NICKNAMES[sock.getpeername()])
+					# Remove broadcasting system messages to simplify the encryption
+					#broadcast(server_socket, sock, "\rClient %s went offline\n" % NICKNAMES[sock.getpeername()])
 					continue
 
 	server_socket.close()

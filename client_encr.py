@@ -1,7 +1,7 @@
 # Created by Artem Losev
 # Creation date: 4/1/2016
 # Reference and source of inspiration: the tutorial at bogotobogo.com
-# The client code for the chat application
+# The encrypted client code for the chat application
 
 import sys, socket, select
 
@@ -31,7 +31,7 @@ def chat_client():
 	sys.stdout.write("Enter your nickname: "); sys.stdout.flush()
 	nickname = sys.stdin.readline()
 	nickname = nickname[:-1]
-
+	
 	# Send the encrypted version
 	s.send(nickname)
 	sys.stdout.write("Welcome to our chatroom, %s. You can start sending messages\n" % nickname)
