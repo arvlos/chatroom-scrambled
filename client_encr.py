@@ -4,6 +4,9 @@
 # The encrypted client code for the chat application
 
 import sys, socket, select
+import encryption
+
+KEY = "Sixteen byte key"
 
 
 RECV_BUFFER = 4096

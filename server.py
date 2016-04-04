@@ -35,26 +35,31 @@ def chat_server():
 				new_socket, address = server_socket.accept()
 				SOCKET_LIST.append(new_socket)
 				count = 0
-				#print "Client (%s, %s) connected" % address
-				#print SOCKET_LIST
+				print "Client (%s, %s) connected" % address
+				
 
 				#broadcast(server_socket, new_socket, "[%s:%s] entered our chat room\n" % address)
 
 			# A message from a client, not a new connection
-			elif sock == new_socket and count == 0:
-				# The first message by the new user is his nickname
-				nickname = sock.recv(RECV_BUFFER)
-				if nickname:
-					count += 1
-					NICKNAMES[sock.getpeername()] = nickname
-					sys.stdout.write("Client (%s, %s) connected " % address)
-					print ("under the nickname %s" % nickname)
-					broadcast(server_socket, new_socket, "\r%s entered our chat room\n" % nickname)
+
+			# This part is commented out after moving all the system
+			# 	messages to clientside
+
+
+			# elif sock == new_socket and count == 0:
+			# 	# The first message by the new user is his nickname
+			# 	nickname = sock.recv(RECV_BUFFER)
+			# 	if nickname:
+			# 		count += 1
+			# 		NICKNAMES[sock.getpeername()] = nickname
+			# 		sys.stdout.write("Client (%s, %s) connected " % address)
+			# 		print ("under the nickname %s" % nickname)
+			# 		broadcast(server_socket, new_socket, "\r%s entered our chat room\n" % nickname)
 				
-				# In case the socket is instantly broken
-				else:
-					if sock in SOCKET_LIST:
-						SOCKET_LIST.remove(sock)
+			# 	# In case the socket is instantly broken
+			# 	else:
+			# 		if sock in SOCKET_LIST:
+			# 			SOCKET_LIST.remove(sock)
 
 			else:
 				# Process data from the client
@@ -64,15 +69,17 @@ def chat_server():
 
 					if data:
 						# Means there is something in the socket
-						broadcast(server_socket, sock, "\r" + '[' + NICKNAMES[sock.getpeername()] + '] ' + data)
+						#broadcast(server_socket, sock, "\r" + '[' + NICKNAMES[sock.getpeername()] + '] ' + data)
+						broadcast(server_socket, sock, data)
 					
 					else:
 						# There is nothing to be read, remove the socket that's broken
 						if sock in SOCKET_LIST:
 							SOCKET_LIST.remove(sock)
 
-						sys.stdout.write("Client %s " % NICKNAMES[sock.getpeername()])
-						print ('(' + str(sock.getpeername()) + ') ' + "went offline")
+						# sys.stdout.write("Client %s " % NICKNAMES[sock.getpeername()])
+						# print ('(' + str(sock.getpeername()) + ') ' + "went offline")
+						sys.stdout.write("Client %s went offline" % sock.getpeername())
 
 						# Remove broadcasting system messages to simplify the encryption
 						#broadcast(server_socket, sock, "\rClient %s went offline\n" % NICKNAMES[sock.getpeername()])

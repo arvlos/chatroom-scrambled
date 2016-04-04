@@ -32,8 +32,10 @@ def chat_client():
 	nickname = sys.stdin.readline()
 	nickname = nickname[:-1]
 
-	# Send the encrypted version
-	s.send(nickname)
+
+	s.send("\r%s entered our chat room\n" % nickname)
+
+	#s.send(nickname)
 	sys.stdout.write("Welcome to our chatroom, %s. You can start sending messages\n" % nickname)
 	print_chat_peripherals()
 
@@ -54,6 +56,7 @@ def chat_client():
 				
 				else:
 					# Print the received data
+					# Decryption should happen here
 					sys.stdout.write(data)
 					print_chat_peripherals()
 			
@@ -62,7 +65,7 @@ def chat_client():
 				msg = sys.stdin.readline()
 
 				# Encryption should happen here before sending
-				s.send(msg)
+				s.send("\r" + '[' + nickname + '] ' + msg)
 				print_chat_peripherals()
 
 
